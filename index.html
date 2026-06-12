@@ -1,1091 +1,1511 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WordPress: O Motor da Web Moderna</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --wp-blue: #0073AA;
-    --wp-dark: #0D1B2A;
-    --wp-mid: #1A2F45;
-    --wp-accent: #00B4D8;
-    --wp-light: #E8F4FD;
-    --wp-white: #F9FBFF;
-    --wp-gold: #FFB347;
-    --text-muted: #8AAFC8;
-    --border: rgba(0,180,216,0.2);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luz e Fontes de Luz</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #f0c060;
+      --blue-light: #a8d8f0;
+      --blue-mid: #4fa8d8;
+      --green-aurora: #40e080;
+      --purple-aurora: #8060d0;
+      --text: #f0f4ff;
+      --text-muted: #b0c4d8;
+      --card-bg: rgba(10, 20, 40, 0.75);
+      --card-border: rgba(80, 160, 220, 0.25);
+      --section-bg: #060e1a;
+    }
 
-  html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--wp-dark);
-    color: var(--wp-white);
-    overflow-x: hidden;
-  }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--section-bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 3rem;
-    background: rgba(13,27,42,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--wp-accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .nav-links {
-    display: flex; gap: 2rem; list-style: none;
-  }
-  .nav-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--wp-accent); }
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 6rem 2rem 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-grid {
-    position: absolute; inset: 0; opacity: 0.07;
-    background-image:
-      linear-gradient(rgba(0,180,216,0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,180,216,0.5) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-  .hero-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-  .orb1 { width: 500px; height: 500px; background: rgba(0,115,170,0.25); top: -100px; left: -100px; }
-  .orb2 { width: 400px; height: 400px; background: rgba(0,180,216,0.15); bottom: -50px; right: -50px; }
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-  .hero-content { position: relative; z-index: 1; max-width: 860px; }
-  .hero-badge {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--wp-accent);
-    border: 1px solid rgba(0,180,216,0.4);
-    padding: 0.4rem 1rem;
-    border-radius: 2rem;
-    margin-bottom: 2rem;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    font-weight: 900;
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
-  }
-  .hero h1 span { color: var(--wp-accent); }
-  .hero-sub {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    max-width: 580px;
-    margin: 0 auto 3rem;
-    line-height: 1.7;
-  }
-  .hero-meta {
-    display: flex; align-items: center; justify-content: center;
-    gap: 2rem; flex-wrap: wrap;
-  }
-  .meta-item {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 0.2rem;
-  }
-  .meta-label {
-    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .meta-value { font-size: 0.9rem; color: var(--wp-white); font-weight: 500; }
-  .meta-sep { width: 1px; height: 40px; background: var(--border); }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(4, 10, 22, 0.3) 0%, rgba(4, 10, 22, 0.15) 50%, rgba(4, 10, 22, 0.75) 100%);
+    }
 
-  .hero-stat {
-    margin-top: 4rem;
-    display: inline-flex; align-items: center; gap: 1rem;
-    background: rgba(0,180,216,0.08);
-    border: 1px solid rgba(0,180,216,0.2);
-    border-radius: 1rem;
-    padding: 1rem 2rem;
-  }
-  .stat-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem; font-weight: 900;
-    color: var(--wp-accent);
-    line-height: 1;
-  }
-  .stat-text { text-align: left; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-  .stat-text strong { color: var(--wp-white); display: block; font-size: 0.95rem; }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+      max-width: 820px;
+    }
 
-  .scroll-indicator {
-    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.1em;
-    animation: bounce 2s infinite;
-  }
-  .scroll-indicator::after {
-    content: ''; display: block; width: 1px; height: 40px;
-    background: linear-gradient(to bottom, var(--wp-accent), transparent);
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
+    .hero-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--green-aurora);
+      margin-bottom: 1.2rem;
+      opacity: 0.9;
+    }
 
-  /* ── SECTIONS ── */
-  section { padding: 6rem 2rem; }
-  .container { max-width: 1100px; margin: 0 auto; }
+    .hero-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 0 60px rgba(64, 224, 128, 0.4), 0 2px 20px rgba(0, 0, 0, 0.8);
+      margin-bottom: 1rem;
+    }
 
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--wp-accent);
-    margin-bottom: 0.75rem;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    line-height: 1.15;
-    margin-bottom: 1.5rem;
-  }
-  .section-body {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    line-height: 1.8;
-    max-width: 700px;
-  }
-  .section-body strong { color: var(--wp-white); }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--blue-light);
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+    }
 
-  /* ── DIVIDER ── */
-  .divider {
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
-    margin: 0 2rem;
-  }
+    .hero-meta {
+      display: inline-flex;
+      gap: 2rem;
+      background: rgba(10, 25, 50, 0.6);
+      border: 1px solid rgba(80, 200, 160, 0.25);
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+    }
 
-  /* ── COMPARISON CARDS ── */
-  .compare-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-    margin-top: 3rem;
-  }
-  .compare-card {
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    padding: 2rem;
-    position: relative; overflow: hidden;
-  }
-  .compare-card.featured {
-    border-color: var(--wp-accent);
-    background: linear-gradient(135deg, rgba(0,180,216,0.08), var(--wp-mid));
-  }
-  .compare-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(to right, transparent, var(--wp-accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .compare-card.featured::before { opacity: 1; }
-  .card-tag {
-    display: inline-block;
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    padding: 0.25rem 0.75rem;
-    border-radius: 2rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-  .tag-free { background: rgba(255,179,71,0.15); color: var(--wp-gold); }
-  .tag-pro { background: rgba(0,180,216,0.15); color: var(--wp-accent); }
-  .compare-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem; font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .compare-card .url {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem; color: var(--text-muted);
-    margin-bottom: 1.25rem;
-  }
-  .compare-list { list-style: none; }
-  .compare-list li {
-    display: flex; align-items: flex-start; gap: 0.75rem;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9rem; color: var(--text-muted);
-    line-height: 1.5;
-  }
-  .compare-list li:last-child { border-bottom: none; }
-  .li-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
-  .li-plus .li-icon { color: #4ADE80; }
-  .li-minus .li-icon { color: #F87171; }
+    .hero-meta span {
+      color: #fff;
+      font-weight: 500;
+    }
 
-  /* ── 3 PILLARS ── */
-  .pillars-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
-    margin-top: 3rem;
-  }
-  .pillar {
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    padding: 2rem;
-    transition: transform 0.3s, border-color 0.3s;
-  }
-  .pillar:hover { transform: translateY(-4px); border-color: var(--wp-accent); }
-  .pillar-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 2.5rem; font-weight: 400;
-    color: rgba(0,180,216,0.2);
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-  .pillar h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.75rem; }
-  .pillar p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
 
-  /* ── DASHBOARD SHOWCASE ── */
-  .dashboard-wrap {
-    margin-top: 3rem;
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1.5rem;
-    overflow: hidden;
-  }
-  .dash-topbar {
-    background: rgba(0,0,0,0.3);
-    padding: 0.75rem 1.5rem;
-    display: flex; align-items: center; gap: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot-r { background: #FF6B6B; }
-  .dot-y { background: #FFD93D; }
-  .dot-g { background: #6BCB77; }
-  .dash-url {
-    flex: 1; text-align: center;
-    font-family: 'DM Mono', monospace; font-size: 0.75rem;
-    color: var(--text-muted);
-    background: rgba(0,0,0,0.2);
-    padding: 0.3rem 1rem; border-radius: 0.5rem;
-    max-width: 300px; margin: 0 auto;
-  }
-  .dash-body {
-    display: grid; grid-template-columns: 220px 1fr;
-  }
-  .dash-sidebar {
-    background: rgba(0,0,0,0.2);
-    padding: 1.5rem 1rem;
-    border-right: 1px solid var(--border);
-  }
-  .dash-sidebar-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem; font-weight: 700;
-    color: var(--wp-accent);
-    margin-bottom: 1.5rem;
-    padding: 0 0.5rem;
-  }
-  .sidebar-section { margin-bottom: 1.25rem; }
-  .sidebar-section-label {
-    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: rgba(138,175,200,0.5);
-    padding: 0 0.75rem;
-    margin-bottom: 0.4rem;
-  }
-  .sidebar-item {
-    display: flex; align-items: center; gap: 0.6rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    cursor: default;
-    transition: background 0.2s, color 0.2s;
-  }
-  .sidebar-item.active {
-    background: rgba(0,180,216,0.12);
-    color: var(--wp-accent);
-  }
-  .sidebar-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
-  .dash-main { padding: 1.5rem; }
-  .dash-main-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem; font-weight: 700;
-    margin-bottom: 1.25rem;
-  }
-  .dash-stats {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-  .dash-stat {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 0.85rem 1rem;
-  }
-  .dash-stat-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.25rem; }
-  .dash-stat-value { font-size: 1.4rem; font-weight: 700; font-family: 'DM Mono', monospace; }
-  .dash-stat-value.blue { color: var(--wp-accent); }
-  .dash-stat-value.gold { color: var(--wp-gold); }
-  .dash-stat-value.green { color: #4ADE80; }
-  .dash-stat-value.red { color: #F87171; }
-  .dash-recent-label {
-    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-muted); margin-bottom: 0.75rem;
-  }
-  .dash-posts { display: flex; flex-direction: column; gap: 0.5rem; }
-  .dash-post {
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(0,0,0,0.15);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 0.6rem;
-    padding: 0.7rem 1rem;
-  }
-  .dp-title { font-size: 0.82rem; font-weight: 500; }
-  .dp-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
-  .dp-badge {
-    font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 2rem;
-    font-weight: 500; letter-spacing: 0.05em;
-  }
-  .badge-pub { background: rgba(74,222,128,0.15); color: #4ADE80; }
-  .badge-draft { background: rgba(255,211,71,0.15); color: #FFD347; }
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--green-aurora), transparent);
+    }
 
-  /* ── ROLE CARDS ── */
-  .roles-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
-    margin-top: 3rem;
-  }
-  .role-card {
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    display: flex; gap: 1rem;
-  }
-  .role-icon {
-    width: 44px; height: 44px; flex-shrink: 0;
-    border-radius: 0.75rem;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-  }
-  .role-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
-  .role-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+    @keyframes bounce {
 
-  /* ── TABS (Temas/Plugins) ── */
-  .tabs { margin-top: 3rem; }
-  .tab-buttons {
-    display: flex; gap: 0.5rem; margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border); padding-bottom: 1rem;
-  }
-  .tab-btn {
-    background: none; border: 1px solid var(--border);
-    padding: 0.6rem 1.25rem; border-radius: 0.6rem;
-    color: var(--text-muted); font-size: 0.85rem; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-  .tab-btn.active, .tab-btn:hover {
-    background: rgba(0,180,216,0.1);
-    border-color: var(--wp-accent);
-    color: var(--wp-accent);
-  }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-  .plugin-card {
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    padding: 1.25rem;
-    transition: border-color 0.3s;
-  }
-  .plugin-card:hover { border-color: var(--wp-accent); }
-  .plugin-card .plug-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-  .plugin-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
-  .plugin-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
-  .plug-tag {
-    display: inline-block; margin-top: 0.75rem;
-    font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 2rem;
-    background: rgba(0,180,216,0.1); color: var(--wp-accent);
-    letter-spacing: 0.05em;
-  }
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
 
-  /* ── PROS/CONS ── */
-  .procon-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-    margin-top: 3rem;
-  }
-  .procon-card {
-    background: var(--wp-mid);
-    border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    padding: 2rem;
-  }
-  .procon-card.pros { border-top: 3px solid #4ADE80; }
-  .procon-card.cons { border-top: 3px solid #F87171; }
-  .procon-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem;
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .procon-list { list-style: none; }
-  .procon-list li {
-    display: flex; gap: 0.75rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9rem; line-height: 1.6;
-  }
-  .procon-list li:last-child { border-bottom: none; }
-  .procon-list li span:first-child { flex-shrink: 0; margin-top: 2px; }
-  .procon-list li p { color: var(--text-muted); }
-  .procon-list li strong { color: var(--wp-white); }
+      50% {
+        transform: translateX(-50%) translateY(6px);
+      }
+    }
 
-  /* ── CONCLUSION ── */
-  .conclusion {
-    background: linear-gradient(135deg, var(--wp-mid), rgba(0,115,170,0.2));
-    border: 1px solid var(--border);
-    border-radius: 2rem;
-    padding: 4rem;
-    margin-top: 3rem;
-    position: relative; overflow: hidden;
-  }
-  .conclusion::before {
-    content: '"';
-    position: absolute; top: -0.5rem; left: 1.5rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 12rem; font-weight: 900;
-    color: rgba(0,180,216,0.05);
-    line-height: 1; pointer-events: none;
-  }
-  .conclusion-text {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    line-height: 1.7;
-    color: var(--wp-white);
-    max-width: 750px;
-    position: relative; z-index: 1;
-  }
-  .conclusion-text em { color: var(--wp-accent); font-style: normal; }
-  .conclusion-author {
-    margin-top: 2rem;
-    display: flex; align-items: center; gap: 1rem;
-    position: relative; z-index: 1;
-  }
-  .author-avatar {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--wp-blue), var(--wp-accent));
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 1.1rem;
-  }
-  .author-info { font-size: 0.85rem; }
-  .author-info strong { display: block; color: var(--wp-white); }
-  .author-info span { color: var(--text-muted); }
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 14, 26, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(80, 160, 220, 0.15);
+      padding: 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
 
-  /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 3rem 2rem;
-    border-top: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 0.82rem;
-  }
-  footer span { color: var(--wp-accent); }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
 
-  /* ── PROGRESS BAR ── */
-  .reading-bar {
-    position: fixed; top: 0; left: 0; height: 2px;
-    background: linear-gradient(to right, var(--wp-blue), var(--wp-accent));
-    z-index: 200; width: 0%; transition: width 0.1s;
-  }
+    nav a:hover {
+      color: var(--green-aurora);
+    }
 
-  /* ── TIMELINE ── */
-  .timeline {
-    margin-top: 3rem;
-    position: relative;
-    padding-left: 2rem;
-  }
-  .timeline::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
-    background: linear-gradient(to bottom, var(--wp-accent), transparent);
-  }
-  .tl-item {
-    position: relative;
-    padding: 0 0 2.5rem 2rem;
-  }
-  .tl-dot {
-    position: absolute; left: -2.4rem; top: 0.2rem;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--wp-accent);
-    border: 2px solid var(--wp-dark);
-    box-shadow: 0 0 0 3px rgba(0,180,216,0.2);
-  }
-  .tl-year {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem; color: var(--wp-accent);
-    letter-spacing: 0.1em; margin-bottom: 0.25rem;
-  }
-  .tl-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
-  .tl-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+    /* ── SECTIONS ── */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
 
-  @media (max-width: 768px) {
-    nav { padding: 1rem; }
-    .nav-links { display: none; }
-    .compare-grid, .pillars-grid, .procon-grid, .roles-grid { grid-template-columns: 1fr; }
-    .tab-panel.active { grid-template-columns: 1fr; }
-    .dash-body { grid-template-columns: 1fr; }
-    .dash-sidebar { display: none; }
-    .dash-stats { grid-template-columns: repeat(2, 1fr); }
-    .conclusion { padding: 2rem; }
-  }
-</style>
+    .section-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-aurora);
+      margin-bottom: 0.6rem;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.2rem;
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--blue-light);
+      margin: 2rem 0 0.6rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin: 1.2rem 0 0.4rem;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-size: 1.02rem;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(to right, var(--green-aurora), var(--blue-mid));
+      border-radius: 2px;
+      margin-bottom: 2rem;
+    }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .img-placeholder {
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 1.8rem 0;
+      border: 1px solid var(--card-border);
+      position: relative;
+      background: rgba(8, 18, 36, 0.9);
+    }
+
+    .img-placeholder canvas {
+      display: block;
+      width: 100%;
+    }
+
+    .img-placeholder .img-caption {
+      padding: 0.7rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .img-placeholder .img-caption::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-aurora);
+      flex-shrink: 0;
+    }
+
+    .img-upload-hint {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.8rem;
+      background: rgba(10, 25, 50, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(6px);
+    }
+
+    /* two-column image row */
+    .img-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.8rem 0;
+    }
+
+    /* ── INTRO CARD ── */
+    .intro-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── PROCESS GRID ── */
+    .process-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .process-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .process-card:hover {
+      border-color: rgba(80, 200, 160, 0.5);
+      transform: translateY(-3px);
+    }
+
+    .process-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .process-card.incand::before {
+      background: linear-gradient(to right, #f0a030, #f06030);
+    }
+
+    .process-card.lumin::before {
+      background: linear-gradient(to right, var(--green-aurora), var(--blue-mid));
+    }
+
+    .process-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .process-card h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    /* ── TAGS ── */
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tag {
+      background: rgba(80, 160, 220, 0.12);
+      border: 1px solid rgba(80, 160, 220, 0.25);
+      border-radius: 50px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.82rem;
+      color: var(--blue-light);
+    }
+
+    .tag.green {
+      background: rgba(64, 224, 128, 0.1);
+      border-color: rgba(64, 224, 128, 0.25);
+      color: var(--green-aurora);
+    }
+
+    .tag.amber {
+      background: rgba(240, 192, 96, 0.12);
+      border-color: rgba(240, 192, 96, 0.25);
+      color: var(--gold);
+    }
+
+    /* ── LUMINESCENCE GRID ── */
+    .lumin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .lumin-card {
+      background: rgba(10, 25, 50, 0.6);
+      border: 1px solid rgba(80, 160, 220, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: border-color 0.3s;
+    }
+
+    .lumin-card:hover {
+      border-color: rgba(64, 224, 128, 0.4);
+    }
+
+    .lumin-card .emoji {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .lumin-card h4 {
+      margin-top: 0;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .lumin-card p {
+      font-size: 0.87rem;
+      margin: 0;
+    }
+
+    /* ── FULL DIVIDER ── */
+    .full-divider {
+      border: none;
+      border-top: 1px solid rgba(80, 160, 220, 0.12);
+      margin: 0;
+    }
+
+    /* ── PHENOM BLOCKS ── */
+    .phenom-block {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phenom-block::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+
+    .phenom-block.lightning::after {
+      background: radial-gradient(ellipse at top right, rgba(255, 220, 80, 0.06), transparent 60%);
+    }
+
+    .phenom-block.aurora-card::after {
+      background: radial-gradient(ellipse at top left, rgba(64, 224, 128, 0.07), transparent 60%);
+    }
+
+    .phenom-block h3 {
+      margin-top: 0;
+    }
+
+    /* ── AURORA COLORS ── */
+    .aurora-colors {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin: 1.2rem 0;
+    }
+
+    .color-chip {
+      border-radius: 10px;
+      padding: 0.9rem 0.6rem;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .color-chip .name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .color-chip .desc {
+      font-size: 0.72rem;
+      opacity: 0.85;
+    }
+
+    .chip-green {
+      background: rgba(40, 180, 100, 0.2);
+      border: 1px solid rgba(40, 180, 100, 0.4);
+      color: #60e090;
+    }
+
+    .chip-red {
+      background: rgba(200, 60, 60, 0.2);
+      border: 1px solid rgba(200, 60, 60, 0.4);
+      color: #f08080;
+    }
+
+    .chip-blue {
+      background: rgba(60, 100, 220, 0.2);
+      border: 1px solid rgba(60, 100, 220, 0.4);
+      color: #80a8f8;
+    }
+
+    .chip-pink {
+      background: rgba(200, 80, 180, 0.2);
+      border: 1px solid rgba(200, 80, 180, 0.4);
+      color: #e090d8;
+    }
+
+    /* ── PROS/CONS ── */
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .pros,
+    .cons {
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .pros {
+      background: rgba(40, 180, 100, 0.08);
+      border: 1px solid rgba(40, 180, 100, 0.2);
+    }
+
+    .cons {
+      background: rgba(220, 80, 60, 0.08);
+      border: 1px solid rgba(220, 80, 60, 0.2);
+    }
+
+    .pros h4 {
+      color: #60e090;
+      margin-top: 0;
+    }
+
+    .cons h4 {
+      color: #f09090;
+      margin-top: 0;
+    }
+
+    .pros ul,
+    .cons ul {
+      list-style: none;
+      padding: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .pros ul li::before {
+      content: '✓ ';
+      color: #60e090;
+    }
+
+    .cons ul li::before {
+      content: '✗ ';
+      color: #f09090;
+    }
+
+    /* ── CONCLUSION ── */
+    .conclusion-box {
+      background: linear-gradient(135deg, rgba(64, 224, 128, 0.07), rgba(80, 130, 220, 0.07));
+      border: 1px solid rgba(64, 224, 128, 0.2);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .conclusion-box p {
+      max-width: 640px;
+      margin: 0 auto 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: rgba(4, 10, 20, 0.98);
+      border-top: 1px solid rgba(80, 160, 220, 0.15);
+    }
+
+    .footer-school-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(80, 160, 220, 0.1);
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .school-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .school-logo-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      border: 2px dashed rgba(80, 160, 220, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: rgba(80, 160, 220, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .school-logo-box:hover {
+      border-color: rgba(64, 224, 128, 0.5);
+      background: rgba(64, 224, 128, 0.07);
+    }
+
+    .school-logo-box input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .school-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .school-logo-box .upload-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .school-logo-box .upload-label {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .school-info h4 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.2rem;
+    }
+
+    .school-info p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .school-banner-area {
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .school-banner-box {
+      width: 100%;
+      height: 56px;
+      border-radius: 10px;
+      border: 2px dashed rgba(80, 160, 220, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: rgba(80, 160, 220, 0.04);
+      position: relative;
+      overflow: hidden;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .school-banner-box:hover {
+      border-color: rgba(64, 224, 128, 0.4);
+      background: rgba(64, 224, 128, 0.05);
+    }
+
+    .school-banner-box input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .school-banner-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .school-banner-box .banner-placeholder {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-main {
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-student .name {
+      color: var(--green-aurora);
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .footer-student .meta {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-student .meta span {
+      color: rgba(200, 220, 240, 0.7);
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(100, 130, 160, 0.5);
+      text-align: right;
+    }
+
+    @media (max-width: 640px) {
+
+      .process-grid,
+      .pros-cons,
+      .img-row {
+        grid-template-columns: 1fr;
+      }
+
+      .aurora-colors {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+
+      .footer-school-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+      }
+
+      .footer-main {
+        padding: 1.5rem;
+      }
+
+      .school-banner-area {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .footer-copy {
+        text-align: left;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="reading-bar" id="readingBar"></div>
-
-<nav>
-  <div class="nav-logo">WORDPRESS</div>
-  <ul class="nav-links">
-    <li><a href="#intro">Introdução</a></li>
-    <li><a href="#comparacao">Comparação</a></li>
-    <li><a href="#infraestrutura">Infraestrutura</a></li>
-    <li><a href="#dashboard">Dashboard</a></li>
-    <li><a href="#design">Design</a></li>
-    <li><a href="#analise">Análise</a></li>
-    <li><a href="#conclusao">Conclusão</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-orb orb1"></div>
-  <div class="hero-orb orb2"></div>
-  <div class="hero-content">
-    <div class="hero-badge">Trabalho de MA · Turma 1P · 2025 - 2026</div>
-    <h1>WordPress:<br><span>O Motor da</span><br>Web Moderna</h1>
-    <p class="hero-sub">Estudo profundo sobre a anatomia, funcionamento e impacto profissional do maior CMS do mundo.</p>
-    <div class="hero-meta">
-      <div class="meta-item">
-        <span class="meta-label">Aluno</span>
-        <span class="meta-value">Filipe Portugal</span>
-      </div>
-      <div class="meta-sep"></div>
-      <div class="meta-item">
-        <span class="meta-label">Número</span>
-        <span class="meta-value">14812</span>
-      </div>
-      <div class="meta-sep"></div>
-      <div class="meta-item">
-        <span class="meta-label">Turma</span>
-        <span class="meta-value">1P</span>
-      </div>
-      <div class="meta-sep"></div>
-      <div class="meta-item">
-        <span class="meta-label">Data</span>
-        <span class="meta-value">Maio de 2026</span>
+  <!-- HERO -->
+  <div class="hero">
+    <canvas class="hero-canvas" id="auroraCanvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-label">Trabalho de Física-Química · 2025–2026</div>
+      <h1 class="hero-title">Luz e Fontes<br>de Luz</h1>
+      <p class="hero-subtitle">Incandescência · Luminescência · Fenómenos Atmosféricos</p>
+      <div class="hero-meta">
+        <div>Aluno: <span>Filipe Portugal</span></div>
+        <div>Nº <span>14812</span></div>
+        <div>Turma <span>1P</span></div>
       </div>
     </div>
-    <div class="hero-stat">
-      <div class="stat-number">43%</div>
-      <div class="stat-text">
-        <strong>de toda a internet</strong>
-        é movida por WordPress — mais de 4 em cada 10 sites.
-      </div>
-    </div>
+    <div class="scroll-hint">Explorar</div>
   </div>
-  <div class="scroll-indicator">scroll</div>
-</section>
 
-<div class="divider"></div>
+  <!-- NAV -->
+  <nav>
+    <a href="#introducao">Introdução</a>
+    <a href="#incandescencia">Incandescência</a>
+    <a href="#luminescencia">Luminescência</a>
+    <a href="#trovoadas">Trovoadas</a>
+    <a href="#auroras">Auroras Boreais</a>
+    <a href="#conclusao">Conclusão</a>
+  </nav>
 
-<!-- INTRO -->
-<section id="intro">
-  <div class="container">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;">
-      <div>
-        <p class="section-label">01 — Introdução</p>
-        <h2 class="section-title">O que é um CMS?</h2>
-        <p class="section-body">
-          O WordPress é classificado globalmente como um <strong>CMS — Content Management System</strong> (Sistema de Gestão de Conteúdos). Trata-se de uma aplicação que revolucionou a internet ao permitir que qualquer utilizador consiga criar, editar, organizar e publicar conteúdos na web <strong>sem escrever uma única linha de código</strong>.
+  <!-- ══ INTRODUÇÃO ══ -->
+  <section id="introducao">
+    <div class="section-tag">01 — Introdução</div>
+    <h2>O que é a Luz?</h2>
+    <div class="divider"></div>
+    <div class="intro-card">
+      <p>A <strong style="color:#fff">luz</strong> é uma forma de energia essencial para a vida na Terra. Graças à luz,
+        os seres humanos conseguem observar o mundo que os rodeia, realizar atividades diárias e obter energia através
+        de processos naturais, como a fotossíntese das plantas.</p>
+      <p>A principal fonte natural de luz é o <strong style="color:var(--gold)">Sol</strong>, que ilumina e aquece o
+        nosso planeta. Existem também inúmeras fontes artificiais criadas pelo ser humano: lâmpadas, lanternas, ecrãs e
+        projetores.</p>
+      <p>A produção de luz pode ocorrer através de diferentes processos físicos. Alguns materiais produzem luz pelo
+        aquecimento intenso; outros emitem luz através de fenómenos químicos, elétricos ou biológicos. A natureza ainda
+        oferece espetáculos luminosos como trovoadas e auroras boreais.</p>
+    </div>
+
+    <!-- Imagem: espectro de luz -->
+    <div class="img-placeholder">
+      <canvas id="cvSpectro" height="160"></canvas>
+      <img
+        src="https://previews.123rf.com/images/kotofonya/kotofonya2206/kotofonya220600059/187431190-visible-light-spectrum-optical-light-wavelength-electromagnetic-visible-color-spectrum-for-human.jpg"
+        alt="Espectro da luz visível" style="display:none">
+      <div class="img-caption">Fig. 1 — Espectro da luz visível (380 nm a 750 nm)</div>
+    </div>
+  </section>
+
+  <hr class="full-divider">
+
+  <!-- ══ INCANDESCÊNCIA ══ -->
+  <section id="incandescencia">
+    <div class="section-tag">02 — Desenvolvimento</div>
+    <h2>Produção de Luz Visível</h2>
+    <div class="divider"></div>
+    <p>A luz visível corresponde à parte do espectro eletromagnético detetável pelo olho humano — entre <strong
+        style="color:#fff">380 e 750 nanómetros</strong>. A sua produção ocorre por dois processos principais:</p>
+
+    <div class="process-grid">
+      <div class="process-card incand">
+        <div class="process-icon">🔥</div>
+        <h3>Incandescência</h3>
+        <p>Emissão de luz por aquecimento intenso dos materiais. Os átomos vibram e libertam energia na forma de
+          radiação luminosa.</p>
+      </div>
+      <div class="process-card lumin">
+        <div class="process-icon">💡</div>
+        <h3>Luminescência</h3>
+        <p>Emissão de luz sem necessidade de aquecimento. Mais eficiente, produz menos calor e tem maior durabilidade.
         </p>
-        <p class="section-body" style="margin-top: 1rem;">
-          Nascido em <strong>2003</strong> graças a Matt Mullenweg e Mike Little, começou como uma ferramenta para blogs e evoluiu para uma infraestrutura massiva capaz de criar desde portfólios simples até portais de notícias de grandes multinacionais.
-        </p>
-      </div>
-      <div>
-        <div class="timeline">
-          <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2003</div>
-            <h4>Fundação</h4>
-            <p>Matt Mullenweg e Mike Little lançam o WordPress como uma plataforma de blogging simples.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2010</div>
-            <h4>Expansão Global</h4>
-            <p>Introdução do repositório de plugins e temas. Ultrapassa os 10 milhões de instalações.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2018</div>
-            <h4>Editor Gutenberg</h4>
-            <p>Lançamento do editor de blocos Gutenberg, democratizando o design visual da plataforma.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-dot"></div>
-            <div class="tl-year">2026</div>
-            <h4>Integração com IA</h4>
-            <p>WordPress integra ferramentas de Inteligência Artificial para criação automatizada de blocos e conteúdos.</p>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
-</section>
 
-<div class="divider"></div>
+    <h3>Incandescência — Como Funciona?</h3>
+    <p>Quando um corpo atinge temperaturas muito elevadas, os átomos vibram intensamente e parte dessa energia é
+      libertada como luz.</p>
 
-<!-- COMPARAÇÃO -->
-<section id="comparacao">
-  <div class="container">
-    <p class="section-label">02 — Comparação</p>
-    <h2 class="section-title">WordPress.com<br>vs. WordPress.org</h2>
-    <p class="section-body">Embora partilhem o mesmo nome, funcionam sob modelos de negócio e níveis de liberdade completamente opostos.</p>
+    <!-- Imagem: Sol -->
+    <img src="https://images5.alphacoders.com/102/1024283.jpg" class="real-image" alt="O Sol">
+    <canvas id="cvSol" class="img-effect"></canvas>
 
-    <div class="compare-grid">
-      <div class="compare-card">
-        <div class="card-tag tag-free">Plataforma Alojada</div>
-        <h3>WordPress.com</h3>
-        <div class="url">*.wordpress.com</div>
-        <ul class="compare-list">
-          <li class="li-plus"><span class="li-icon">✓</span><span>Alojamento incluído e gerido pela Automattic</span></li>
-          <li class="li-plus"><span class="li-icon">✓</span><span>Site online imediatamente, sem configurações técnicas</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Utilizador não é dono do site</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Publicidade forçada na versão gratuita</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Impossível instalar plugins externos no plano free</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Endereço sempre com ".wordpress.com"</span></li>
+    <h4>💡 Lâmpadas Incandescentes</h4>
+    <p>Filamento de tungsténio aquecido por corrente elétrica. Acima de ~2500 °C, o filamento torna-se incandescente e
+      emite luz.</p>
+
+    <h4>⚒️ Metais Aquecidos</h4>
+    <p>Ao aquecer num forno, um metal muda de cor progressivamente, indicando o aumento de temperatura:</p>
+    <div class="tag-list">
+      <span class="tag" style="background:rgba(120,20,20,0.3);border-color:rgba(180,40,40,0.4);color:#e08080">Vermelho
+        escuro</span>
+      <span class="tag" style="background:rgba(200,40,20,0.25);border-color:rgba(220,60,40,0.4);color:#f09070">Vermelho
+        vivo</span>
+      <span class="tag"
+        style="background:rgba(240,120,20,0.2);border-color:rgba(240,140,40,0.4);color:#f0b060">Laranja</span>
+      <span class="tag"
+        style="background:rgba(240,200,20,0.2);border-color:rgba(240,210,60,0.4);color:#f0d050">Amarelo</span>
+      <span class="tag"
+        style="background:rgba(240,240,240,0.1);border-color:rgba(240,240,240,0.35);color:#f0f0f0">Branco</span>
+    </div>
+
+    <!-- Imagem: lâmpada + metal aquecido -->
+    <div class="img-row">
+      <img
+        src="https://elements-resized.envatousercontent.com/elements-video-cover-images/58fd7c13-b0b5-4196-8fbb-89d1aac18cc4/video_preview/video_preview_0000.jpg"
+        class="real-image" alt="Lâmpada incandescente">
+      <canvas id="cvLampada" class="img-effect"></canvas>
+      <img src="https://www.etaplighting.com/sites/default/files/uploads/Blog_kleurtemperatuur-2-hot-iron_web.png"
+        class="real-image" alt="Metal aquecido">
+      <canvas id="cvMetal" class="img-effect"></canvas>
+    </div>
+
+    <div class="pros-cons" style="margin-top:1.5rem">
+      <div class="pros">
+        <h4>Vantagens</h4>
+        <ul>
+          <li>Luz contínua e agradável</li>
+          <li>Tecnologia simples</li>
         </ul>
       </div>
-      <div class="compare-card featured">
-        <div class="card-tag tag-pro">Software Livre · Recomendado</div>
-        <h3>WordPress.org</h3>
-        <div class="url">o-teu-dominio.pt</div>
-        <ul class="compare-list">
-          <li class="li-plus"><span class="li-icon">✓</span><span>Liberdade absoluta e controlo total sobre o código</span></li>
-          <li class="li-plus"><span class="li-icon">✓</span><span>Instalar qualquer tema ou plugin do mercado</span></li>
-          <li class="li-plus"><span class="li-icon">✓</span><span>Monetização sem restrições</span></li>
-          <li class="li-plus"><span class="li-icon">✓</span><span>Domínio personalizado e profissional</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Exige contratação de alojamento e domínio</span></li>
-          <li class="li-minus"><span class="li-icon">✗</span><span>Responsabilidade total pela manutenção e segurança</span></li>
+      <div class="cons">
+        <h4>Desvantagens</h4>
+        <ul>
+          <li>Elevado consumo de energia</li>
+          <li>Grande perda de calor</li>
+          <li>Menor duração das lâmpadas</li>
         </ul>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="divider"></div>
+  <hr class="full-divider">
 
-<!-- INFRAESTRUTURA -->
-<section id="infraestrutura">
-  <div class="container">
-    <p class="section-label">03 — Infraestrutura</p>
-    <h2 class="section-title">Os 3 Pilares Técnicos</h2>
-    <p class="section-body">Para colocar um site WordPress.org em funcionamento, é obrigatório conjugar três elementos fundamentais.</p>
+  <!-- ══ LUMINESCÊNCIA ══ -->
+  <section id="luminescencia">
+    <div class="section-tag">03 — Luminescência</div>
+    <h2>Tipos de Luminescência</h2>
+    <div class="divider"></div>
+    <p>A luminescência permite emitir luz com <strong style="color:#fff">maior eficiência energética</strong> e menor
+      produção de calor. A energia recebida pelos átomos é libertada diretamente sob a forma de luz.</p>
 
-    <div class="pillars-grid">
-      <div class="pillar">
-        <div class="pillar-num">01</div>
-        <h3>Domínio</h3>
-        <p>A identidade digital e o endereço exclusivo que os utilizadores digitam no navegador para aceder ao site. Exemplo: <code style="color:var(--wp-accent); font-family:'DM Mono',monospace; font-size:0.85em;">www.a-tua-empresa.pt</code></p>
+    <div class="lumin-grid">
+      <div class="lumin-card">
+        <div class="emoji">🌟</div>
+        <h4>Fluorescência</h4>
+        <p>Absorção de UV e emissão instantânea. Lâmpadas fluorescentes, tintas, marcadores.</p>
       </div>
-      <div class="pillar">
-        <div class="pillar-num">02</div>
-        <h3>Alojamento Web</h3>
-        <p>Aluguer de espaço num servidor físico ligado à internet 24h/dia. Armazena todos os ficheiros de imagem, folhas de estilo e código do site.</p>
+      <div class="lumin-card">
+        <div class="emoji">🌙</div>
+        <h4>Fosforescência</h4>
+        <p>Emite luz após deixar de receber energia. Autocolantes no escuro, ponteiros de relógios.</p>
       </div>
-      <div class="pillar">
-        <div class="pillar-num">03</div>
-        <h3>Base de Dados</h3>
-        <p>MySQL ou MariaDB. Armazena textos, palavras-passe, configurações e comentários de forma estruturada. Comunica com o software em tempo real a cada carregamento de página.</p>
+      <div class="lumin-card">
+        <div class="emoji">⚡</div>
+        <h4>Eletroluminescência</h4>
+        <p>Luz por passagem de corrente elétrica. LEDs, ecrãs de TV e telemóveis.</p>
+      </div>
+      <div class="lumin-card">
+        <div class="emoji">🧪</div>
+        <h4>Quimioluminescência</h4>
+        <p>Luz por reações químicas. Bastões luminosos de emergência, reagentes laboratoriais.</p>
+      </div>
+      <div class="lumin-card">
+        <div class="emoji">🐛</div>
+        <h4>Bioluminescência</h4>
+        <p>Luz produzida por organismos vivos. Pirilampos, peixes marinhos, fungos.</p>
       </div>
     </div>
-  </div>
-</section>
 
-<div class="divider"></div>
+    <!-- Imagem: LED / bioluminescência -->
+    <div class="img-row">
+      <img src="https://files.tecnoblog.net/wp-content/uploads/2023/03/leds-amarelo-vermelho-verde.jpg" alt="LEDs"
+        style="width:100%; display:block;">
+      <img
+        src="https://static.vecteezy.com/ti/fotos-gratis/p1/67531247-uma-floresta-panorama-com-a-agosto-ceu-e-vagalumes-gratis-foto.jpeg"
+        alt="Pirilampos" style="width:100%; display:block;">
+    </div>
 
-<!-- DASHBOARD -->
-<section id="dashboard">
-  <div class="container">
-    <p class="section-label">04 — Painel de Administração</p>
-    <h2 class="section-title">Anatomia do Dashboard</h2>
-    <p class="section-body">A área de gestão privada, protegida por credenciais. É aqui que se controla toda a vida do projeto — desde a criação de conteúdos até à gestão de utilizadores.</p>
+    <h3>Aplicações da Luminescência</h3>
+    <div class="tag-list">
+      <span class="tag green">Iluminação LED</span>
+      <span class="tag green">Sinalização de emergência</span>
+      <span class="tag green">Medicina</span>
+      <span class="tag green">Publicidade</span>
+      <span class="tag green">Investigação científica</span>
+    </div>
+  </section>
 
-    <div class="dashboard-wrap">
-      <div class="dash-topbar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
-        <div class="dash-url">www.o-teu-site.pt/wp-admin</div>
+  <hr class="full-divider">
+
+  <!-- ══ TROVOADAS ══ -->
+  <section id="trovoadas">
+    <div class="section-tag">04 — Fenómenos Atmosféricos</div>
+    <h2>Trovoadas</h2>
+    <div class="divider"></div>
+
+    <div class="phenom-block lightning">
+      <h3>⛈️ Como se Formam?</h3>
+      <p>As trovoadas desenvolvem-se em nuvens <strong style="color:#fff">cumulonimbus</strong>. O intenso movimento de
+        partículas de água e gelo gera colisões que separam cargas elétricas — a parte superior fica positiva, a
+        inferior negativa. Quando a diferença de potencial é demasiado elevada, ocorre uma descarga: o relâmpago.</p>
+    </div>
+
+    <!-- Imagem: trovoada -->
+    <img src="https://cdn.fondecranvip.com/2026/02/IfoM4OdK-fond-decran-Foudre-72.webp"
+      alt="Relâmpago durante uma trovoada" style="width:100%; display:block;">
+
+    <h3>⚡ Relâmpagos</h3>
+    <p>Podem atingir temperaturas superiores a <strong style="color:var(--gold)">30 000 °C</strong>, tornando o ar
+      extremamente luminoso. A luz resulta da ionização do ar pela descarga elétrica.</p>
+    <div class="tag-list">
+      <span class="tag amber">Entre nuvens</span>
+      <span class="tag amber">Dentro da mesma nuvem</span>
+      <span class="tag amber">Nuvem → Solo</span>
+    </div>
+
+    <h3>🔊 Trovões</h3>
+    <p>O aquecimento brusco do ar provoca a sua expansão, gerando ondas sonoras. Como a luz viaja mais depressa que o
+      som, vemos primeiro o relâmpago e só depois ouvimos o trovão.</p>
+
+    <h3>Importância das Trovoadas</h3>
+    <div class="tag-list">
+      <span class="tag">Redistribuição de energia na atmosfera</span>
+      <span class="tag">Formação de compostos úteis para os solos</span>
+      <span class="tag">Participação no ciclo da água</span>
+    </div>
+  </section>
+
+  <hr class="full-divider">
+
+  <!-- ══ AURORAS ══ -->
+  <section id="auroras">
+    <div class="section-tag">05 — Auroras Boreais</div>
+    <h2>Auroras Boreais</h2>
+    <div class="divider"></div>
+
+    <!-- Imagem: aurora boreal -->
+    <img src="https://jujunatrip.com/wp-content/uploads/2018/11/aurora-00-1050x591.jpg" alt="Aurora boreal na Noruega"
+      style="width:100%; display:block;">
+
+    <div class="phenom-block aurora-card">
+      <h3>🌌 Origem</h3>
+      <p>O Sol emite partículas carregadas — o <strong style="color:#fff">vento solar</strong>. Ao chegarem à Terra, são
+        desviadas pelo campo magnético terrestre e conduzidas para as regiões polares. Ao colidirem com oxigénio e azoto
+        na atmosfera, transferem energia para os átomos, que ao libertar essa energia, produzem luz.</p>
+    </div>
+
+    <h3>Cores das Auroras</h3>
+    <div class="aurora-colors">
+      <div class="color-chip chip-green">
+        <span class="name">Verde</span>
+        <span class="desc">O² · 100–250 km · mais comum</span>
       </div>
-      <div class="dash-body">
-        <div class="dash-sidebar">
-          <div class="dash-sidebar-logo">WP Admin</div>
-          <div class="sidebar-section">
-            <div class="sidebar-section-label">Conteúdo</div>
-            <div class="sidebar-item active"><span class="sidebar-dot"></span> Painel</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Artigos</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Média</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Páginas</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Comentários</div>
+      <div class="color-chip chip-red">
+        <span class="name">Vermelho</span>
+        <span class="desc">O² · altitudes elevadas</span>
+      </div>
+      <div class="color-chip chip-blue">
+        <span class="name">Azul / Violeta</span>
+        <span class="desc">Azoto · baixas altitudes</span>
+      </div>
+      <div class="color-chip chip-pink">
+        <span class="name">Rosa</span>
+        <span class="desc">Combinação de gases</span>
+      </div>
+    </div>
+
+    <!-- Imagem: mapa auroras -->
+    <div class="img-row">
+      <div class="img-placeholder" style="margin:0">
+        <canvas id="cvAuroraCores" height="160"></canvas>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIjf8KUSuJh5seDagspkANSYDyQgr3QP_0BA&s"
+          alt="Diferentes cores da aurora boreal" style="display:none">
+        <div class="img-caption">Fig. 9 — Diferentes cores da aurora boreal</div>
+      </div>
+      <div class="img-placeholder" style="margin:0">
+        <canvas id="cvVentoSolar" height="160"></canvas>
+        <img src="https://www.infoescola.com/wp-content/uploads/2012/08/magnetosfera-121554235.jpg"
+          alt="Vento solar e campo magnético terrestre" style="display:none">
+        <div class="img-caption">Fig. 10 — Vento solar e campo magnético terrestre</div>
+      </div>
+    </div>
+
+    <h3>Onde Observar?</h3>
+    <div class="tag-list">
+      <span class="tag green">🇮🇸 Islândia</span>
+      <span class="tag green">🇳🇴 Noruega</span>
+      <span class="tag green">🇫🇮 Finlândia</span>
+      <span class="tag green">🇸🇪 Suécia</span>
+      <span class="tag green">🇨🇦 Canadá</span>
+      <span class="tag green">🇺🇸 Alasca</span>
+      <span class="tag green">🇬🇱 Groenlândia</span>
+    </div>
+
+    <h3>Importância Científica</h3>
+    <p>O estudo das auroras permite compreender o vento solar, o campo magnético terrestre, as interações Sol–Terra e os
+      efeitos das tempestades solares nas comunicações e satélites.</p>
+  </section>
+
+  <hr class="full-divider">
+
+  <!-- ══ CONCLUSÃO ══ -->
+  <section id="conclusao">
+    <div class="section-tag">06 — Conclusão</div>
+    <h2>Síntese Final</h2>
+    <div class="divider"></div>
+    <div class="conclusion-box">
+      <p>A luz é um fenómeno fundamental para a vida e para a sociedade moderna. A sua produção ocorre por processos
+        distintos — a <strong style="color:var(--gold)">incandescência</strong>, através do aquecimento intenso dos
+        materiais, e a <strong style="color:var(--green-aurora)">luminescência</strong>, com maior eficiência energética
+        e menor produção de calor.</p>
+      <p>A natureza oferece ainda fenómenos extraordinários como as <strong style="color:var(--gold)">trovoadas</strong>
+        e as <strong style="color:var(--green-aurora)">auroras boreais</strong>, que demonstram a complexidade das
+        interações entre energia, matéria e atmosfera.</p>
+      <p>O estudo da luz continua essencial para o avanço da ciência e da tecnologia, contribuindo para novas formas de
+        iluminação, comunicação e compreensão do universo.</p>
+    </div>
+
+    <h3 style="margin-top:3rem">📚 Bibliografia</h3>
+    <ul
+      style="list-style:none;padding:0;color:var(--text-muted);font-size:0.95rem;display:flex;flex-direction:column;gap:0.5rem">
+      <li>• Manual de Ciências Físico-Químicas</li>
+      <li>• Enciclopédias de Física e Astronomia</li>
+      <li>• Artigos científicos sobre eletricidade atmosférica</li>
+      <li>• Publicações sobre auroras e fenómenos espaciais</li>
+      <li>• Recursos educativos de divulgação científica</li>
+    </ul>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+
+    <!-- Barra da escola -->
+    <div class="footer-school-bar">
+      <div class="school-logo-area">
+        <div class="school-logo-box" title="Clique para carregar o logótipo da escola">
+          <input type="file" accept="image/*" onchange="loadImage(this,'schoolLogoImg','schoolLogoPlaceholder')">
+          <div id="schoolLogoPlaceholder">
+            <div class="upload-icon">🏫</div>
+            <div class="upload-label">Logo<br>escola</div>
           </div>
-          <div class="sidebar-section">
-            <div class="sidebar-section-label">Aparência</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Temas</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Menus</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Editor</div>
+          <img id="schoolLogoImg" alt="Logo da escola">
+        </div>
+        <div class="school-info">
+          <h4 id="schoolNameText" onclick="editSchoolName(this)" title="Clique para editar" style="cursor:pointer">Nome
+            da Escola</h4>
+          <p>Clique no nome para editar</p>
+        </div>
+      </div>
+
+      <div class="school-banner-area">
+        <div class="school-banner-box" title="Clique para carregar a barra/imagem da escola">
+          <input type="file" accept="image/*" onchange="loadImage(this,'schoolBannerImg','schoolBannerPlaceholder')">
+          <div class="banner-placeholder" id="schoolBannerPlaceholder">
+            <span>🖼️</span>
+            <span>Carregar barra / imagem da escola</span>
           </div>
-          <div class="sidebar-section">
-            <div class="sidebar-section-label">Sistema</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Plugins</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Utilizadores</div>
-            <div class="sidebar-item"><span class="sidebar-dot"></span> Definições</div>
-          </div>
-        </div>
-        <div class="dash-main">
-          <div class="dash-main-title">Visão Geral do Site</div>
-          <div class="dash-stats">
-            <div class="dash-stat">
-              <div class="dash-stat-label">Artigos</div>
-              <div class="dash-stat-value blue">24</div>
-            </div>
-            <div class="dash-stat">
-              <div class="dash-stat-label">Páginas</div>
-              <div class="dash-stat-value gold">8</div>
-            </div>
-            <div class="dash-stat">
-              <div class="dash-stat-label">Comentários</div>
-              <div class="dash-stat-value green">142</div>
-            </div>
-            <div class="dash-stat">
-              <div class="dash-stat-label">Pendentes</div>
-              <div class="dash-stat-value red">3</div>
-            </div>
-          </div>
-          <div class="dash-recent-label">Artigos Recentes</div>
-          <div class="dash-posts">
-            <div class="dash-post">
-              <div>
-                <div class="dp-title">Como otimizar o SEO do teu site em 2026</div>
-                <div class="dp-meta">Por Administrador · há 2 horas</div>
-              </div>
-              <div class="dp-badge badge-pub">Publicado</div>
-            </div>
-            <div class="dash-post">
-              <div>
-                <div class="dp-title">Guia completo de WooCommerce para iniciantes</div>
-                <div class="dp-meta">Por Editor · há 1 dia</div>
-              </div>
-              <div class="dp-badge badge-pub">Publicado</div>
-            </div>
-            <div class="dash-post">
-              <div>
-                <div class="dp-title">Os melhores temas WordPress gratuitos de 2026</div>
-                <div class="dp-meta">Por Autor · há 3 dias</div>
-              </div>
-              <div class="dp-badge badge-draft">Rascunho</div>
-            </div>
-          </div>
+          <img id="schoolBannerImg" alt="Barra da escola">
         </div>
       </div>
     </div>
 
-    <!-- Funções/Permissões -->
-    <div style="margin-top: 3rem;">
-      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem;">Perfis de Utilizador</h3>
-      <p class="section-body" style="margin-bottom: 0;">O WordPress permite gestão avançada de equipas através de diferentes níveis de permissão.</p>
-    </div>
-    <div class="roles-grid">
-      <div class="role-card">
-        <div class="role-icon" style="background: rgba(248,113,113,0.15); color:#F87171;">👑</div>
-        <div>
-          <h4>Administrador</h4>
-          <p>Controlo absoluto sobre o sistema. Pode apagar o site, alterar código e gerir faturação. Acesso total a todas as funcionalidades.</p>
+    <!-- Info aluno -->
+    <div class="footer-main">
+      <div class="footer-student">
+        <div class="name">Filipe Portugal</div>
+        <div class="meta">
+          <span>Nº 14812</span>
+          <span>Turma 1P</span>
+          <span>Física-Química</span>
+          <span>2025–2026</span>
         </div>
       </div>
-      <div class="role-card">
-        <div class="role-icon" style="background: rgba(0,180,216,0.15); color:var(--wp-accent);">✏️</div>
-        <div>
-          <h4>Editor</h4>
-          <p>Gere e publica conteúdos de todos os autores. Sem acesso às configurações de design ou instalação de plugins.</p>
-        </div>
-      </div>
-      <div class="role-card">
-        <div class="role-icon" style="background: rgba(74,222,128,0.15); color:#4ADE80;">📝</div>
-        <div>
-          <h4>Autor</h4>
-          <p>Cria e publica apenas os seus próprios artigos. Não pode gerir conteúdos de outros utilizadores.</p>
-        </div>
-      </div>
-      <div class="role-card">
-        <div class="role-icon" style="background: rgba(255,179,71,0.15); color:var(--wp-gold);">💬</div>
-        <div>
-          <h4>Colaborador</h4>
-          <p>Escreve artigos mas não os pode publicar diretamente. Aguarda aprovação de um editor ou administrador.</p>
-        </div>
+      <div class="footer-copy">
+        Luz e Fontes de Luz<br>
+        <span style="opacity:0.5">Trabalho escolar · Junho 2026</span>
       </div>
     </div>
-  </div>
-</section>
+  </footer>
 
-<div class="divider"></div>
+  <script>
+    /* ── Upload helper ── */
+    function loadImage(input, imgId, placeholderId) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById(imgId);
+        const ph = document.getElementById(placeholderId);
+        img.src = e.target.result;
+        img.style.display = 'block';
+        if (ph) ph.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
 
-<!-- DESIGN & PLUGINS -->
-<section id="design">
-  <div class="container">
-    <p class="section-label">05 — Temas & Plugins</p>
-    <h2 class="section-title">Estética e Funcionalidade</h2>
-    <p class="section-body">A separação total entre conteúdo e apresentação visual é uma das maiores qualidades técnicas do WordPress — gerida por Temas e expandida por Plugins.</p>
+    function editSchoolName(el) {
+      const current = el.textContent;
+      const input = document.createElement('input');
+      input.value = current;
+      input.style.cssText = 'background:transparent;border:none;border-bottom:1px solid #40e080;color:#fff;font-size:1rem;font-weight:600;outline:none;width:220px';
+      el.replaceWith(input);
+      input.focus();
+      input.select();
+      const done = () => {
+        const span = document.createElement('h4');
+        span.id = 'schoolNameText';
+        span.textContent = input.value || 'Nome da Escola';
+        span.title = 'Clique para editar';
+        span.style.cursor = 'pointer';
+        span.onclick = () => editSchoolName(span);
+        input.replaceWith(span);
+      };
+      input.addEventListener('blur', done);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') done(); });
+    }
 
-    <div class="tabs">
-      <div class="tab-buttons">
-        <button class="tab-btn active" onclick="switchTab('temas', this)">🎨 Temas</button>
-        <button class="tab-btn" onclick="switchTab('plugins', this)">🔧 Plugins</button>
-        <button class="tab-btn" onclick="switchTab('conteudo', this)">📄 Conteúdo</button>
-      </div>
+    /* ── Image placeholder canvases ── */
+    function drawPlaceholder(id, drawFn) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth || 860;
+      const ctx = canvas.getContext('2d');
+      drawFn(ctx, canvas.width, canvas.height);
+    }
 
-      <div id="temas" class="tab-panel active">
-        <div class="plugin-card">
-          <div class="plug-icon">🖥️</div>
-          <h4>O que é um Tema?</h4>
-          <p>Conjunto de ficheiros que define o layout, paletas de cores, estilos de letra e aspeto dos menus. Trocar o tema muda toda a estética sem alterar o conteúdo.</p>
-          <span class="plug-tag">Design</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">🧩</div>
-          <h4>Gutenberg</h4>
-          <p>Editor nativo de blocos do WordPress. Filosofia Drag & Drop para criar páginas complexas sem código CSS.</p>
-          <span class="plug-tag">Editor Nativo</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">⚡</div>
-          <h4>Elementor</h4>
-          <p>Constructor visual externo e popular. Permite desenhar páginas em tempo real com colunas, botões, vídeos e animações avançadas.</p>
-          <span class="plug-tag">Page Builder</span>
-        </div>
-      </div>
+    window.addEventListener('load', () => {
+      /* Espectro de luz */
+      drawPlaceholder('cvSpectro', (ctx, W, H) => {
+        for (let i = 0; i < W; i++) {
+          const t = i / W;
+          const hue = 260 + t * 100;
+          const alpha = 0.5 + 0.5 * Math.sin(t * Math.PI);
+          ctx.fillStyle = `hsla(${hue},100%,60%,${alpha})`;
+          ctx.fillRect(i, 0, 1, H);
+        }
+        const labels = [['380nm', 0.02], ['Violeta', 0.08], ['Azul', 0.22], ['Verde', 0.42], ['Amarelo', 0.6], ['Laranja', 0.75], ['Vermelho', 0.88], ['750nm', 0.97]];
+        ctx.font = '12px Segoe UI';
+        ctx.textAlign = 'center';
+        labels.forEach(([l, x]) => {
+          ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          ctx.fillText(l, x * W, H - 8);
+        });
+      });
 
-      <div id="plugins" class="tab-panel">
-        <div class="plugin-card">
-          <div class="plug-icon">🛡️</div>
-          <h4>Wordfence Security</h4>
-          <p>Antivírus e firewall em tempo real. Bloqueia ataques de força bruta, analisa ficheiros em busca de código malicioso e alerta sobre vulnerabilidades.</p>
-          <span class="plug-tag">Segurança</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">🛒</div>
-          <h4>WooCommerce</h4>
-          <p>Transforma qualquer site numa loja virtual avançada com carrinho de compras, gestão de stocks, portes de envio e métodos de pagamento (MBWay, PayPal, cartões).</p>
-          <span class="plug-tag">E-commerce</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">📊</div>
-          <h4>Yoast SEO</h4>
-          <p>Ferramenta de otimização para motores de busca. Analisa conteúdos e ajuda a melhorar o posicionamento orgânico no Google.</p>
-          <span class="plug-tag">SEO</span>
-        </div>
-      </div>
+      /* Sol */
+      drawPlaceholder('cvSol', (ctx, W, H) => {
+        const bg = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * 0.6);
+        bg.addColorStop(0, '#0a1a2e');
+        bg.addColorStop(1, '#020810');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < 120; i++) {
+          ctx.beginPath();
+          ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 1.2 + 0.2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(200,220,255,${Math.random() * 0.7 + 0.1})`;
+          ctx.fill();
+        }
+        const sun = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, H * 0.36);
+        sun.addColorStop(0, '#fffde0'); sun.addColorStop(0.3, '#ffd040'); sun.addColorStop(0.7, '#ff8010'); sun.addColorStop(1, 'rgba(255,80,0,0)');
+        ctx.fillStyle = sun;
+        ctx.beginPath(); ctx.arc(W / 2, H / 2, H * 0.36, 0, Math.PI * 2); ctx.fill();
+        const corona = ctx.createRadialGradient(W / 2, H / 2, H * 0.2, W / 2, H / 2, H * 0.5);
+        corona.addColorStop(0, 'rgba(255,160,40,0.15)'); corona.addColorStop(1, 'rgba(255,80,0,0)');
+        ctx.fillStyle = corona;
+        ctx.beginPath(); ctx.arc(W / 2, H / 2, H * 0.5, 0, Math.PI * 2); ctx.fill();
+      });
 
-      <div id="conteudo" class="tab-panel">
-        <div class="plugin-card">
-          <div class="plug-icon">📑</div>
-          <h4>Páginas</h4>
-          <p>Para conteúdo estático e intemporal. Sem data de publicação. Ideal para "Quem Somos", "Contactos" e Políticas de Privacidade.</p>
-          <span class="plug-tag">Estático</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">📰</div>
-          <h4>Artigos (Posts)</h4>
-          <p>Para conteúdos cronológicos: notícias, blog, comunicados. Organizados do mais recente para o mais antigo. Com sistema de comentários nativo.</p>
-          <span class="plug-tag">Dinâmico</span>
-        </div>
-        <div class="plugin-card">
-          <div class="plug-icon">🏷️</div>
-          <h4>Categorias & Tags</h4>
-          <p>Sistema de organização rigoroso que permite ao leitor navegar pelos temas. As Categorias organizam, as Tags descrevem com precisão.</p>
-          <span class="plug-tag">Taxonomia</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      /* Lâmpada incandescente */
+      drawPlaceholder('cvLampada', (ctx, W, H) => {
+        ctx.fillStyle = '#04080f'; ctx.fillRect(0, 0, W, H);
+        const glow = ctx.createRadialGradient(W / 2, H * 0.42, 0, W / 2, H * 0.42, W * 0.45);
+        glow.addColorStop(0, 'rgba(255,220,80,0.25)'); glow.addColorStop(1, 'rgba(255,140,20,0)');
+        ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(200,180,100,0.4)'; ctx.lineWidth = 1;
+        for (let a = 0; a < 12; a++) {
+          const angle = a / 12 * Math.PI * 2, len = W * 0.3;
+          ctx.beginPath();
+          ctx.moveTo(W / 2, H * 0.42);
+          ctx.lineTo(W / 2 + Math.cos(angle) * len, H * 0.42 + Math.sin(angle) * len);
+          ctx.stroke();
+        }
+        const bulb = ctx.createRadialGradient(W / 2, H * 0.38, 0, W / 2, H * 0.42, H * 0.28);
+        bulb.addColorStop(0, '#fffde0'); bulb.addColorStop(0.5, '#ffd060'); bulb.addColorStop(1, 'rgba(255,160,40,0.6)');
+        ctx.fillStyle = bulb;
+        ctx.beginPath(); ctx.ellipse(W / 2, H * 0.38, W * 0.15, H * 0.22, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.font = '13px Segoe UI'; ctx.fillStyle = 'rgba(180,200,220,0.6)'; ctx.textAlign = 'center';
+        ctx.fillText('Filamento de Tungsténio', W / 2, H - 12);
+      });
 
-<div class="divider"></div>
+      /* Metal aquecido */
+      drawPlaceholder('cvMetal', (ctx, W, H) => {
+        ctx.fillStyle = '#05090e'; ctx.fillRect(0, 0, W, H);
+        const rects = [
+          { x: 0.05, c1: '#200808', c2: '#601010' }, { x: 0.22, c1: '#601010', c2: '#c02020' },
+          { x: 0.39, c1: '#c04010', c2: '#f06020' }, { x: 0.56, c1: '#f08020', c2: '#f0c040' },
+          { x: 0.73, c1: '#f0d060', c2: '#fffff0' }
+        ];
+        const bW = W * 0.16, bH = H * 0.55, bY = H * 0.2;
+        rects.forEach(r => {
+          const grd = ctx.createLinearGradient(r.x * W, bY, r.x * W + bW, bY);
+          grd.addColorStop(0, r.c1); grd.addColorStop(1, r.c2);
+          ctx.fillStyle = grd;
+          ctx.beginPath(); ctx.roundRect(r.x * W, bY, bW, bH, 4); ctx.fill();
+        });
+        const temps = ['~600°C', '~900°C', '~1100°C', '~1300°C', '~1500°C'];
+        ctx.font = '10px Segoe UI'; ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(200,220,240,0.55)';
+        rects.forEach((r, i) => ctx.fillText(temps[i], r.x * W + bW / 2, bY + bH + 18));
+      });
 
-<!-- ANÁLISE CRÍTICA -->
-<section id="analise">
-  <div class="container">
-    <p class="section-label">06 — Análise Crítica</p>
-    <h2 class="section-title">Vantagens e Desvantagens</h2>
-    <p class="section-body">A adoção do WordPress deve ser avaliada de forma ponderada, contrapondo as suas virtudes com os seus desafios técnicos.</p>
+      /* LED */
+      drawPlaceholder('cvLed', (ctx, W, H) => {
+        ctx.fillStyle = '#030810'; ctx.fillRect(0, 0, W, H);
+        const colors = ['#40e0ff', '#40ff80', '#ff4080', '#4080ff', '#ffe040', '#ff8040'];
+        const n = 12;
+        for (let i = 0; i < n; i++) {
+          const col = colors[i % colors.length];
+          const x = (0.08 + i / n * 0.84) * W, y = H * 0.5;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, H * 0.32);
+          g.addColorStop(0, col.replace(')', ',0.35)').replace('rgb', 'rgba'));
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+          ctx.fillStyle = col;
+          ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          ctx.beginPath(); ctx.arc(x - 2, y - 2, 2, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.font = '12px Segoe UI'; ctx.fillStyle = 'rgba(140,180,200,0.6)'; ctx.textAlign = 'center';
+        ctx.fillText('Eletroluminescência — LEDs', W / 2, H - 12);
+      });
 
-    <div class="procon-grid">
-      <div class="procon-card pros">
-        <div class="procon-title"><span>✅</span> Pontos Fortes</div>
-        <ul class="procon-list">
-          <li>
-            <span>🎯</span>
-            <p><strong>Acessibilidade</strong> — Interface amigável que permite gestão autónoma por clientes e equipas de marketing sem conhecimentos técnicos.</p>
-          </li>
-          <li>
-            <span>🌍</span>
-            <p><strong>Comunidade Global</strong> — Milhões de fóruns, tutoriais e programadores focados em resolver problemas comuns, facilitando o suporte.</p>
-          </li>
-          <li>
-            <span>🔍</span>
-            <p><strong>SEO Nativo</strong> — Código base construído para ser limpo e compreensível, facilitando a indexação e bom posicionamento no Google.</p>
-          </li>
-          <li>
-            <span>💰</span>
-            <p><strong>Custo Reduzido</strong> — Software gratuito e open-source. Custos resumem-se ao domínio e alojamento, acessíveis a pequenas empresas.</p>
-          </li>
-        </ul>
-      </div>
-      <div class="procon-card cons">
-        <div class="procon-title"><span>⚠️</span> Pontos Fracos</div>
-        <ul class="procon-list">
-          <li>
-            <span>🔄</span>
-            <p><strong>Manutenção Contínua</strong> — O núcleo, temas e plugins exigem atualizações constantes. Ignorá-las pode quebrar o layout ou criar incompatibilidades.</p>
-          </li>
-          <li>
-            <span>🔒</span>
-            <p><strong>Vulnerabilidades de Segurança</strong> — Palavras-passe fracas, alojamentos de má qualidade ou plugins obsoletos tornam o site permeável a invasões.</p>
-          </li>
-          <li>
-            <span>⚡</span>
-            <p><strong>Performance</strong> — Com muitos plugins ativos, o site pode tornar-se lento sem otimização adequada de caching e imagens.</p>
-          </li>
-          <li>
-            <span>📈</span>
-            <p><strong>Curva de Aprendizagem</strong> — Apesar da interface amigável, dominar WordPress.org a nível profissional exige tempo e prática consideráveis.</p>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+      /* Bioluminescência */
+      drawPlaceholder('cvBioLumin', (ctx, W, H) => {
+        ctx.fillStyle = '#010808'; ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < 30; i++) {
+          const x = Math.random() * W, y = Math.random() * H;
+          const r = Math.random() * 3 + 2;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, r * 6);
+          g.addColorStop(0, 'rgba(120,255,80,0.9)'); g.addColorStop(0.4, 'rgba(80,220,60,0.3)'); g.addColorStop(1, 'rgba(40,180,40,0)');
+          ctx.fillStyle = g; ctx.fillRect(x - r * 6, y - r * 6, r * 12, r * 12);
+          ctx.fillStyle = '#c0ffb0';
+          ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let i = 0; i < 80; i++) {
+          ctx.fillStyle = `rgba(80,200,60,${Math.random() * 0.15})`;
+          ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H, 1, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.font = '12px Segoe UI'; ctx.fillStyle = 'rgba(120,220,100,0.6)'; ctx.textAlign = 'center';
+        ctx.fillText('Bioluminescência — pirilampos', W / 2, H - 12);
+      });
 
-<div class="divider"></div>
+      /* Trovoada */
+      drawPlaceholder('cvTrovoada', (ctx, W, H) => {
+        const sky = ctx.createLinearGradient(0, 0, 0, H);
+        sky.addColorStop(0, '#080c18'); sky.addColorStop(0.6, '#141828'); sky.addColorStop(1, '#0a0c10');
+        ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = 'rgba(40,50,80,0.9)';
+        ctx.beginPath(); ctx.ellipse(W * 0.5, H * 0.15, W * 0.45, H * 0.22, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(W * 0.35, H * 0.2, W * 0.3, H * 0.18, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(W * 0.65, H * 0.18, W * 0.28, H * 0.16, 0, 0, Math.PI * 2); ctx.fill();
+        const bolt = [[W * 0.5, H * 0.3], [W * 0.46, H * 0.44], [W * 0.51, H * 0.44], [W * 0.44, H * 0.62], [W * 0.52, H * 0.62], [W * 0.42, H * 0.8]];
+        ctx.shadowColor = '#a0c0ff'; ctx.shadowBlur = 20;
+        ctx.strokeStyle = 'rgba(180,210,255,0.9)'; ctx.lineWidth = 3;
+        ctx.beginPath(); bolt.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); bolt.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+        ctx.shadowBlur = 0;
+        const gnd = ctx.createLinearGradient(0, H * 0.7, 0, H);
+        gnd.addColorStop(0, '#080c10'); gnd.addColorStop(1, '#0a0e14');
+        ctx.fillStyle = gnd; ctx.fillRect(0, H * 0.7, W, H * 0.3);
+        ctx.font = '12px Segoe UI'; ctx.fillStyle = 'rgba(160,185,220,0.55)'; ctx.textAlign = 'center';
+        ctx.fillText('Descarga elétrica — ionização do ar — 30 000 °C', W / 2, H - 10);
+      });
 
-<!-- CONCLUSÃO -->
-<section id="conclusao">
-  <div class="container">
-    <p class="section-label">07 — Conclusão</p>
-    <h2 class="section-title">Reflexão Final</h2>
+      /* Aurora principal */
+      drawPlaceholder('cvAuroraMain', (ctx, W, H) => {
+        const sky = ctx.createLinearGradient(0, 0, 0, H);
+        sky.addColorStop(0, '#010610'); sky.addColorStop(0.7, '#020d18'); sky.addColorStop(1, '#030810');
+        ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < 160; i++) {
+          ctx.fillStyle = `rgba(200,220,255,${Math.random() * 0.6 + 0.1})`;
+          ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H * 0.6, Math.random() * 1.2 + 0.2, 0, Math.PI * 2); ctx.fill();
+        }
+        const bands = [
+          { y: 0.2, c1: 'rgba(30,200,100,0.22)', c2: 'rgba(60,160,220,0.18)', w: 0.18 },
+          { y: 0.3, c1: 'rgba(60,220,140,0.18)', c2: 'rgba(100,90,200,0.15)', w: 0.14 },
+          { y: 0.15, c1: 'rgba(20,180,80,0.14)', c2: 'rgba(130,70,180,0.12)', w: 0.1 },
+        ];
+        bands.forEach(b => {
+          const grd = ctx.createLinearGradient(0, b.y * H - b.w * H, 0, b.y * H + b.w * H);
+          grd.addColorStop(0, 'rgba(0,0,0,0)'); grd.addColorStop(0.5, b.c1); grd.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = grd;
+          for (let x = 0; x < W; x += 2) {
+            const wave = Math.sin(x / W * Math.PI * 3) * b.w * 0.4 * H;
+            ctx.fillRect(x, b.y * H + wave - b.w * H, 2, b.w * 2 * H);
+          }
+        });
+        ctx.fillStyle = '#010508';
+        const tY = H * 0.75;
+        for (let x = 0; x < W; x += 16) {
+          const h = (18 + Math.sin(x * 0.05) * 7 + Math.sin(x * 0.12 + 1) * 10) * (H / 400);
+          ctx.beginPath(); ctx.moveTo(x, tY); ctx.lineTo(x + 8, tY - h); ctx.lineTo(x + 16, tY); ctx.fill();
+        }
+        ctx.fillRect(0, tY, W, H - tY);
+        ctx.font = '12px Segoe UI'; ctx.fillStyle = 'rgba(100,200,140,0.5)'; ctx.textAlign = 'center';
+        ctx.fillText('Aurora boreal — partículas do vento solar a iluminar o céu polar', W / 2, H - 8);
+      });
 
-    <div class="conclusion">
-      <p class="conclusion-text">
-        O WordPress consolidou a sua liderança porque implementou um conceito nobre: <em>a democratização da internet</em>. Ao retirar o monopólio da criação web das mãos dos programadores, permitiu que pequenas empresas, artesãos e marcas locais construíssem uma presença digital robusta com <em>custos drasticamente reduzidos</em>. Olhando para o meu futuro profissional, o domínio técnico do WordPress não é apenas uma competência extra — é uma <em>ferramenta obrigatória de sobrevivência no mercado</em>.
-      </p>
-      <div class="conclusion-author">
-        <div class="author-avatar">[I]</div>
-        <div class="author-info">
-          <strong>Filipe Portugal</strong>
-          <span>Turma 1P · Maio 2026</span>
-        </div>
-      </div>
-    </div>
+      /* Aurora cores */
+      drawPlaceholder('cvAuroraCores', (ctx, W, H) => {
+        ctx.fillStyle = '#010810'; ctx.fillRect(0, 0, W, H);
+        const cols = [['#40e090', 0.1], ['#e04040', 0.32], ['#4070f0', 0.54], ['#e060d0', 0.76]];
+        cols.forEach(([c, x]) => {
+          const g = ctx.createRadialGradient(x * W, H * 0.4, 0, x * W, H * 0.4, W * 0.22);
+          g.addColorStop(0, c.replace('#', 'rgba(').replace(/(..)(..)(..)/, (_, r, g2, b) => `${parseInt(r, 16)},${parseInt(g2, 16)},${parseInt(b, 16)},0.55)`));
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        });
+        for (let i = 0; i < 80; i++) {
+          ctx.fillStyle = `rgba(200,230,255,${Math.random() * 0.4})`;
+          ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H * 0.7, Math.random() * 1 + 0.2, 0, Math.PI * 2); ctx.fill();
+        }
+      });
 
-    <!-- Futuro -->
-    <div style="margin-top: 3rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;">
-      <div class="pillar">
-        <div class="pillar-num" style="font-size:2rem;">🤖</div>
-        <h3>IA no WordPress</h3>
-        <p>Integração profunda de Inteligência Artificial para criação automatizada de blocos e escrita de conteúdos.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num" style="font-size:2rem;">🌐</div>
-        <h3>Full-Site Editing</h3>
-        <p>Evolução do editor de blocos para controlo total da estrutura e design de todo o site sem código.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num" style="font-size:2rem;">📱</div>
-        <h3>Mobile-First</h3>
-        <p>Cada vez mais focado em experiências mobile perfeitas, com temas responsivos nativos e performance otimizada.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <p>WordPress: O Motor da Web Moderna</p>
-  <p style="margin-top: 0.5rem;">Obrigado pela vossa atenção! Qualquer dúvida, estou disponível para discutir os detalhes técnicos e criativos deste projeto.</p>
-
-<script>
-  // Reading progress bar
-  window.addEventListener('scroll', () => {
-    const doc = document.documentElement;
-    const scrollTop = doc.scrollTop || document.body.scrollTop;
-    const scrollHeight = doc.scrollHeight - doc.clientHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    document.getElementById('readingBar').style.width = progress + '%';
-  });
-
-  // Tab switching
-  function switchTab(tabId, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  // Intersection observer for fade-in
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
+      /* Vento solar */
+      drawPlaceholder('cvVentoSolar', (ctx, W, H) => {
+        ctx.fillStyle = '#010610'; ctx.fillRect(0, 0, W, H);
+        for (let i = 0; i < 100; i++) {
+          ctx.fillStyle = `rgba(200,210,255,${Math.random() * 0.5})`;
+          ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 0.8 + 0.2, 0, Math.PI * 2); ctx.fill();
+        }
+        const sun = ctx.createRadialGradient(W * 0.12, H * 0.5, 0, W * 0.12, H * 0.5, H * 0.18);
+        sun.addColorStop(0, '#fffde0'); sun.addColorStop(0.5, '#ffd040'); sun.addColorStop(1, 'rgba(255,160,0,0)');
+        ctx.fillStyle = sun; ctx.beginPath(); ctx.arc(W * 0.12, H * 0.5, H * 0.18, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,200,60,0.3)'; ctx.lineWidth = 1;
+        for (let i = -3; i <= 3; i++) {
+          ctx.beginPath(); ctx.moveTo(W * 0.22, H * 0.5 + i * (H * 0.09));
+          ctx.bezierCurveTo(W * 0.4, H * 0.5 + i * (H * 0.09), W * 0.55, H * 0.5 + i * (H * 0.06), W * 0.65, H * 0.5 + i * (H * 0.03));
+          ctx.stroke();
+        }
+        const earth = ctx.createRadialGradient(W * 0.75, H * 0.5, 0, W * 0.75, H * 0.5, H * 0.16);
+        earth.addColorStop(0, '#1060e0'); earth.addColorStop(0.6, '#0840a0'); earth.addColorStop(1, 'rgba(10,40,100,0)');
+        ctx.fillStyle = earth; ctx.beginPath(); ctx.arc(W * 0.75, H * 0.5, H * 0.16, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(80,200,140,0.5)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.ellipse(W * 0.75, H * 0.5, H * 0.28, H * 0.22, 0.3, 0, Math.PI * 2); ctx.stroke();
+        ctx.font = '11px Segoe UI'; ctx.fillStyle = 'rgba(180,210,240,0.55)'; ctx.textAlign = 'center';
+        ctx.fillText('Vento solar desviado pelo campo magnético terrestre', W / 2, H - 10);
+      });
     });
-  }, { threshold: 0.1 });
 
-  document.querySelectorAll('.pillar, .compare-card, .plugin-card, .role-card, .procon-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(el);
-  });
-</script>
+    /* ── HERO AURORA CANVAS ── */
+    const heroCanvas = document.getElementById('auroraCanvas');
+    const hCtx = heroCanvas.getContext('2d');
+
+    function heroResize() {
+      heroCanvas.width = heroCanvas.offsetWidth;
+      heroCanvas.height = heroCanvas.offsetHeight;
+    }
+    heroResize();
+    window.addEventListener('resize', heroResize);
+
+    const stars = Array.from({ length: 200 }, () => ({ x: Math.random(), y: Math.random() * 0.7, r: Math.random() * 1.2 + 0.2, a: Math.random() }));
+    const bands = [
+      { y: 0.22, color1: [40, 200, 120], color2: [60, 160, 220], phase: 0, speed: 0.00035, amp: 0.055, freq: 1.2 },
+      { y: 0.30, color1: [80, 220, 160], color2: [100, 100, 220], phase: 1.2, speed: 0.00028, amp: 0.045, freq: 0.9 },
+      { y: 0.15, color1: [20, 180, 100], color2: [140, 80, 200], phase: 2.4, speed: 0.00042, amp: 0.035, freq: 1.5 },
+      { y: 0.38, color1: [60, 200, 200], color2: [40, 120, 200], phase: 0.7, speed: 0.00022, amp: 0.03, freq: 0.7 },
+    ];
+
+    let t = 0;
+    function drawHeroAurora() {
+      const W = heroCanvas.width, H = heroCanvas.height;
+      hCtx.clearRect(0, 0, W, H);
+      const sky = hCtx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, '#020812'); sky.addColorStop(0.5, '#040e1e'); sky.addColorStop(1, '#060a10');
+      hCtx.fillStyle = sky; hCtx.fillRect(0, 0, W, H);
+      stars.forEach(s => {
+        const flicker = 0.5 + 0.5 * Math.sin(t * 0.002 + s.a * 10);
+        hCtx.beginPath(); hCtx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+        hCtx.fillStyle = `rgba(200,220,255,${0.3 + 0.5 * flicker})`; hCtx.fill();
+      });
+      bands.forEach(b => {
+        const baseY = b.y * H, bandH = H * 0.18;
+        for (let layer = 0; layer < 3; layer++) {
+          const alpha = 0.18 - layer * 0.045, spread = bandH * (1 + layer * 0.6);
+          hCtx.save();
+          const path = new Path2D();
+          const steps = 80;
+          for (let i = 0; i <= steps; i++) {
+            const x = (i / steps) * W;
+            const w1 = Math.sin(i / steps * Math.PI * 2 * b.freq + t * b.speed * 1000 + b.phase) * b.amp * H;
+            const w2 = Math.sin(i / steps * Math.PI * 2 * b.freq * 1.7 + t * b.speed * 800 + b.phase + 1) * b.amp * 0.5 * H;
+            const y = baseY + w1 + w2;
+            i === 0 ? path.moveTo(x, y + spread) : path.lineTo(x, y + spread);
+          }
+          for (let i = steps; i >= 0; i--) {
+            const x = (i / steps) * W;
+            const w1 = Math.sin(i / steps * Math.PI * 2 * b.freq + t * b.speed * 1000 + b.phase) * b.amp * H;
+            const w2 = Math.sin(i / steps * Math.PI * 2 * b.freq * 1.7 + t * b.speed * 800 + b.phase + 1) * b.amp * 0.5 * H;
+            const y = baseY + w1 + w2;
+            path.lineTo(x, y - spread * 0.4);
+          }
+          path.closePath();
+          const [r1, g1, b1] = b.color1, [r2, g2, b2] = b.color2, mix = layer / 3;
+          const r = Math.round(r1 * (1 - mix) + r2 * mix), g = Math.round(g1 * (1 - mix) + g2 * mix), bl = Math.round(b1 * (1 - mix) + b2 * mix);
+          const grad = hCtx.createRadialGradient(W * 0.5, baseY, 0, W * 0.5, baseY, W * 0.6);
+          grad.addColorStop(0, `rgba(${r},${g},${bl},${alpha})`);
+          grad.addColorStop(0.5, `rgba(${r1},${g1},${b1},${alpha * 0.6})`);
+          grad.addColorStop(1, `rgba(${r2},${g2},${b2},${alpha * 0.2})`);
+          hCtx.fillStyle = grad; hCtx.fill(path); hCtx.restore();
+        }
+      });
+      const hGlow = hCtx.createLinearGradient(0, H * 0.6, 0, H);
+      hGlow.addColorStop(0, 'rgba(20,60,40,0)'); hGlow.addColorStop(0.6, 'rgba(10,30,20,0.25)'); hGlow.addColorStop(1, 'rgba(5,15,10,0.6)');
+      hCtx.fillStyle = hGlow; hCtx.fillRect(0, 0, W, H);
+      hCtx.fillStyle = '#01050a';
+      const tY = H * 0.78;
+      for (let x = 0; x < W; x += 18) {
+        const h = (20 + Math.sin(x * 0.04) * 8 + Math.sin(x * 0.11 + 2) * 12) * (H / 600);
+        hCtx.beginPath(); hCtx.moveTo(x, tY); hCtx.lineTo(x + 9, tY - h); hCtx.lineTo(x + 18, tY); hCtx.fill();
+      }
+      hCtx.fillRect(0, tY, W, H - tY);
+      t++; requestAnimationFrame(drawHeroAurora);
+    }
+    drawHeroAurora();
+  </script>
 </body>
+
 </html>
